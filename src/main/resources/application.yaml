@@ -1,0 +1,84 @@
+spring:
+  application:
+    name: bind9-dlz-manager
+
+  thymeleaf:
+    suffix : .html
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+server:
+  port: 8053
+  tomcat:
+    remoteip:
+      remote-ip-header: "x-real-ip"
+      protocol-header: "x-forwarded-proto"
+
+logging:
+  level:
+    root: INFO
+  base:
+    name: ${spring.application.name}
+
+---
+spring:
+  application:
+    name: bind9-dlz-manager
+  config:
+    activate:
+      on-profile: prod
+
+  thymeleaf:
+    cache : true
+
+  datasource:
+    driverClassName: ${DATASOURCE_DRIVERCLASS:-org.mariadb.jdbc.Driver}
+    url: ${DATASOURCE_URL:-jdbc:mysql://localhost:3306/named?characterEncoding=UTF-8}
+    username: ${DATASOURCE_USERNAME:-named}
+    password: ${DATASOURCE_PASSWORD:-named}
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        use_sql_comments: false
+
+logging:
+  dir:
+    path: ${LOG_FILE_PATH:-/webapp/logs}
+
+---
+spring:
+  application:
+    name: bind9-dlz-manager
+  config:
+    activate:
+      on-profile: local
+
+  thymeleaf:
+    cache : false
+
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/named?characterEncoding=UTF-8&useTimezone=true&serverTimezone=Asia/Seoul
+    username: named
+    password: named
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  dir:
+    path: ./bind9-dlz-manager/logs
